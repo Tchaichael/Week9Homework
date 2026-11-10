@@ -7,7 +7,7 @@ public class BallForces : MonoBehaviour
     private Rigidbody rb;
     public float movementForce;
     public float jumpForce;
-
+    public float clickForce;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -19,6 +19,23 @@ public class BallForces : MonoBehaviour
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             rb.AddForce(Vector3.up*jumpForce,ForceMode.Impulse);
+        }
+        if (Mouse .current .leftButton .wasPressedThisFrame)
+        {
+            Ray mouseCameraRay = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+            RaycastHit mouseRaycastHit;
+
+            if (Physics .Raycast (mouseCameraRay, out mouseRaycastHit))
+            {
+                if(mouseRaycastHit .collider .gameObject ==this.gameObject )
+                {
+                 
+                    Vector3 forceDirection = transform.position - mouseRaycastHit.point;
+                    forceDirection.Normalize();
+                    rb.AddForceAtPosition(forceDirection * clickForce,
+                   mouseRaycastHit.point, ForceMode.Impulse);
+                }
+            }
         }
     }
     void FixedUpdate()
