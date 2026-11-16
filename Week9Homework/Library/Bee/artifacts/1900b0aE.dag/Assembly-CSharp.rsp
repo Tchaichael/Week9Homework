@@ -527,6 +527,8 @@
 "Assets/Script/Retry.cs"
 "Assets/Script/RollBall.cs"
 "Assets/Script/Rotate.cs"
+"Assets/Script/SlimeBody.cs"
+"Assets/Script/SlimeStage.cs"
 "Assets/Script/UpAndDown.cs"
 "Assets/Script/WindZone.cs"
 "Assets/Script/booster.cs"

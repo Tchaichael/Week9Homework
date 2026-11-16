@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class SplitBall : MonoBehaviour
 {
     [Header("Split Settings")]
@@ -10,15 +11,22 @@ public class SplitBall : MonoBehaviour
     private Rigidbody rb;
     private bool hasSplit = false;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        if (rb == null) rb = gameObject.AddComponent<Rigidbody>();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        // ·ÀÖ¹Ò»´ÎÅö×²²úÉúºÜ¶à´Î·ÖÁÑ
-        if (hasSplit)
+        // Unity sends collision callbacks to disabled MonoBehaviours too.
+        // Splitting belongs only to scene 2; its newer component takes priority.
+        if (!isActiveAndEnabled || gameObject.scene.name != "2" ||
+            GetComponent<CollisionSplit>() != null)
+            return;
+
+        // é˜²æ­¢ä¸€æ¬¡ç¢°æ’äº§ç”Ÿå¾ˆå¤šæ¬¡åˆ†è£‚
+        if (hasSplit || ballPrefab == null)
             return;
 
         hasSplit = true;
@@ -30,7 +38,7 @@ public class SplitBall : MonoBehaviour
     {
         Vector3 splitPosition = transform.position;
 
-        // ´´½¨Á½¸öĞÂµÄÆå×Ó
+        // åˆ›å»ºä¸¤ä¸ªæ–°çš„æ£‹å­
         GameObject ball1 =
             Instantiate(ballPrefab, splitPosition, transform.rotation);
 
@@ -39,19 +47,25 @@ public class SplitBall : MonoBehaviour
 
         Rigidbody rb1 = ball1.GetComponent<Rigidbody>();
         Rigidbody rb2 = ball2.GetComponent<Rigidbody>();
+        if (rb1 == null) rb1 = ball1.AddComponent<Rigidbody>();
+        if (rb2 == null) rb2 = ball2.AddComponent<Rigidbody>();
+        rb1.isKinematic = false;
+        rb2.isKinematic = false;
+        rb1.constraints = rb.constraints;
+        rb2.constraints = rb.constraints;
 
-        // ±£´æÔ­À´Æå×ÓµÄËÙ¶È
+        // ä¿å­˜åŸæ¥æ£‹å­çš„é€Ÿåº¦
         Vector3 originalVelocity = rb.linearVelocity;
 
-        // ÈÃÁ½¸öĞÂÆå×Ó¼Ì³ĞÔ­À´µÄËÙ¶È
+        // è®©ä¸¤ä¸ªæ–°æ£‹å­ç»§æ‰¿åŸæ¥çš„é€Ÿåº¦
         rb1.linearVelocity = originalVelocity;
         rb2.linearVelocity = originalVelocity;
 
-        // ÔÚÔ­À´µÄÔË¶¯»ù´¡ÉÏ£¬ÈÃÁ½¸öÆå×ÓÏò²»Í¬·½Ïò·Ö¿ª
+        // åœ¨åŸæ¥çš„è¿åŠ¨åŸºç¡€ä¸Šï¼Œè®©ä¸¤ä¸ªæ£‹å­å‘ä¸åŒæ–¹å‘åˆ†å¼€
         rb1.AddForce(Vector3.up * splitForce, ForceMode.Impulse);
         rb2.AddForce(Vector3.down * splitForce, ForceMode.Impulse);
 
-        // É¾³ıÔ­À´µÄÆå×Ó
+        // åˆ é™¤åŸæ¥çš„æ£‹å­
         Destroy(gameObject);
     }
 }
