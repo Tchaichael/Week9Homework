@@ -520,6 +520,8 @@
 "Assets/Script/1/Project.cs"
 "Assets/Script/BallForces.cs"
 "Assets/Script/BowlingGame.cs"
+"Assets/Script/CollisionSplit.cs"
+"Assets/Script/JointLinkVisual.cs"
 "Assets/Script/Magnement.cs"
 "Assets/Script/Replay.cs"
 "Assets/Script/Retry.cs"

@@ -5,33 +5,42 @@ using TMPro;
 [RequireComponent(typeof(LineRenderer))]
 public class BallGameManager : MonoBehaviour
 {
-    [Header("°ó¶¨×é¼ş")]
+    [Header("ç»‘å®šç»„ä»¶")]
     public Transform ballTransform;
     private Rigidbody ballRb;
     private LineRenderer lineRenderer;
 
-    [Header("UI ÉèÖÃ")]
-    [Tooltip("°Ñ³¡¾°ÀïµÄµ¹¼ÆÊ± TextMeshPro ÍÏµ½ÕâÀï")]
+    [Header("UI è®¾ç½®")]
+    [Tooltip("æŠŠåœºæ™¯é‡Œçš„å€’è®¡æ—¶ TextMeshPro æ‹–åˆ°è¿™é‡Œ")]
     public TextMeshProUGUI countdownText;
 
-    [Header("¹ì¼£Ô¤²âÉèÖÃ")]
+    [Header("è½¨è¿¹é¢„æµ‹è®¾ç½®")]
     public int trajectorySteps = 30;
     public float timeStep = 0.05f;
 
-    [Header("¾²Ö¹Óë³¬Ê±ÉèÖÃ")]
-    [Tooltip("°××ÓÍêÈ«¾²Ö¹¶àÉÙÃëºó¿ªÊ¼µ¹¼ÆÊ±£¨Ãë£©")]
-    public float waitBeforeCountdown = 1.0f; // Í£ÏÂºóµÈ´ı¼¸Ãë¿ªÊ¼¶ÁÃë
+    [Header("é™æ­¢ä¸è¶…æ—¶è®¾ç½®")]
+    [Tooltip("ç™½å­å®Œå…¨é™æ­¢å¤šå°‘ç§’åå¼€å§‹å€’è®¡æ—¶ï¼ˆç§’ï¼‰")]
+    public float waitBeforeCountdown = 1.0f; // åœä¸‹åç­‰å¾…å‡ ç§’å¼€å§‹è¯»ç§’
 
-    [Tooltip("µ¹¼ÆÊ±±¾ÉíµÄÃëÊı£¨UI ÏÔÊ¾²¢ÖØĞÂ¼ÓÔØ³¡¾°µÄÊ±¼ä£©")]
+    [Tooltip("å€’è®¡æ—¶æœ¬èº«çš„ç§’æ•°ï¼ˆUI æ˜¾ç¤ºå¹¶é‡æ–°åŠ è½½åœºæ™¯çš„æ—¶é—´ï¼‰")]
     public float countdownDuration = 4.0f;
 
     private Vector3 initialPosition;
     private bool hasFired = false;
-    private bool isBallStopped = false; // °××ÓÊÇ·ñÒÑ¾­Í£ÎÈ
+    private bool isBallStopped = false; // ç™½å­æ˜¯å¦å·²ç»åœç¨³
 
-    private Vector3 lastPosition;       // ÓÃÓÚ¼ì²âÎ»ÖÃ±ä»¯µÄÉÏÒ»Ö¡Î»ÖÃ
-    private float stopTimer = 0f;       // Í£ÎÈºóµÄ»º³å¼ÆÊ±Æ÷
-    private float countdownTimer = 0f;  // µ¹¼ÆÊ±¼ÆÊ±Æ÷
+    private Vector3 lastPosition;       // ç”¨äºæ£€æµ‹ä½ç½®å˜åŒ–çš„ä¸Šä¸€å¸§ä½ç½®
+    private float stopTimer = 0f;       // åœç¨³åçš„ç¼“å†²è®¡æ—¶å™¨
+    private float countdownTimer = 0f;  // å€’è®¡æ—¶è®¡æ—¶å™¨
+
+    private Rigidbody splitPartner;
+
+    public void RegisterSplitPartner(Rigidbody partner)
+    {
+        splitPartner = partner;
+        isBallStopped = false;
+        stopTimer = 0f;
+    }
 
     void Start()
     {
@@ -54,17 +63,24 @@ public class BallGameManager : MonoBehaviour
 
     void Update()
     {
-        // 1. Èç¹ûÒÑ¾­·¢Éä³öÈ¥ÁË
+        // 1. å¦‚æœå·²ç»å‘å°„å‡ºå»äº†
         if (hasFired)
         {
-            // Èç¹û°××Ó»¹Ã»ÍêÈ«Í£ÎÈ£¬ÏÈ¼ì²âËüÊÇ²»ÊÇ¾²Ö¹ÁË
+            if (splitPartner != null &&
+                (splitPartner.linearVelocity.sqrMagnitude >= 0.01f || ballRb.linearVelocity.sqrMagnitude >= 0.01f))
+            {
+                isBallStopped = false;
+                stopTimer = 0f;
+                if (countdownText != null) countdownText.gameObject.SetActive(false);
+            }
+            // å¦‚æœç™½å­è¿˜æ²¡å®Œå…¨åœç¨³ï¼Œå…ˆæ£€æµ‹å®ƒæ˜¯ä¸æ˜¯é™æ­¢äº†
             if (!isBallStopped)
             {
                 CheckIfPositionStopped();
             }
             else
             {
-                // ÒÑ¾­Í£ÎÈÁË£¬¿ªÊ¼½øĞĞµ¹¼ÆÊ±£¡
+                // å·²ç»åœç¨³äº†ï¼Œå¼€å§‹è¿›è¡Œå€’è®¡æ—¶ï¼
                 countdownTimer -= Time.deltaTime;
                 float remainingTime = Mathf.Max(0, countdownTimer);
 
@@ -74,17 +90,17 @@ public class BallGameManager : MonoBehaviour
                     countdownText.text = "Reload Time: " + remainingTime.ToString("F1") + "s";
                 }
 
-                // µ¹¼ÆÊ±½áÊø£¬ÖØĞÂ¼ÓÔØ³¡¾°
+                // å€’è®¡æ—¶ç»“æŸï¼Œé‡æ–°åŠ è½½åœºæ™¯
                 if (countdownTimer <= 0f)
                 {
-                    Debug.Log("µ¹¼ÆÊ±½áÊø£¬ÖØĞÂ¼ÓÔØ³¡¾°£¡");
+                    Debug.Log("å€’è®¡æ—¶ç»“æŸï¼Œé‡æ–°åŠ è½½åœºæ™¯ï¼");
                     ReloadCurrentScene();
                 }
             }
             return;
         }
 
-        // 2. ¼ì²é¾É½Å±¾ÊÇ²»ÊÇÕıÔÚÍÏ×§°××Ó£¨»­Ô¤²âÏß£©
+        // 2. æ£€æŸ¥æ—§è„šæœ¬æ˜¯ä¸æ˜¯æ­£åœ¨æ‹–æ‹½ç™½å­ï¼ˆç”»é¢„æµ‹çº¿ï¼‰
         Vector3 currentPos = ballTransform.position;
         float dragDistance = Vector3.Distance(currentPos, initialPosition);
 
@@ -107,38 +123,39 @@ public class BallGameManager : MonoBehaviour
         }
     }
 
-    // ºËĞÄ¼ì²â£ºÅĞ¶Ï X ºÍ Y ÖáÎ»ÖÃÊÇ·ñ¾²Ö¹
+    // æ ¸å¿ƒæ£€æµ‹ï¼šåˆ¤æ–­ X å’Œ Y è½´ä½ç½®æ˜¯å¦é™æ­¢
     void CheckIfPositionStopped()
     {
-        // ¼ÆËãµ±Ç°Î»ÖÃÓëÉÏÒ»Ö¡Î»ÖÃµÄ¾àÀë£¨Ö»±È½Ï X ºÍ Y Öá£©
+        // è®¡ç®—å½“å‰ä½ç½®ä¸ä¸Šä¸€å¸§ä½ç½®çš„è·ç¦»ï¼ˆåªæ¯”è¾ƒ X å’Œ Y è½´ï¼‰
         Vector2 currentXY = new Vector2(ballTransform.position.x, ballTransform.position.y);
         Vector2 lastXY = new Vector2(lastPosition.x, lastPosition.y);
         float moveDelta = Vector2.Distance(currentXY, lastXY);
 
-        // Èç¹ûÕâÒ»Ö¡ºÍÉÏÒ»Ö¡ÒÆ¶¯µÄ¾àÀë¼«Ğ¡£¨¼¸ºõÃ»¶¯£©£¬»òÕß¸ÕÌåËÙ¶ÈºÜµÍ
-        if (moveDelta < 0.001f && ballRb.linearVelocity.magnitude < 0.1f)
+        // å¦‚æœè¿™ä¸€å¸§å’Œä¸Šä¸€å¸§ç§»åŠ¨çš„è·ç¦»æå°ï¼ˆå‡ ä¹æ²¡åŠ¨ï¼‰ï¼Œæˆ–è€…åˆšä½“é€Ÿåº¦å¾ˆä½
+        if (moveDelta < 0.001f && ballRb.linearVelocity.magnitude < 0.1f &&
+            (splitPartner == null || splitPartner.linearVelocity.magnitude < 0.1f))
         {
             stopTimer += Time.deltaTime;
 
-            // Á¬Ğø¾²Ö¹´ïµ½Éè¶¨µÄ»º³åÊ±¼ä£¨ÀıÈç 1 Ãë£©£¬ÈÏÎªËüÕæÕıÍ£ÎÈÁË
+            // è¿ç»­é™æ­¢è¾¾åˆ°è®¾å®šçš„ç¼“å†²æ—¶é—´ï¼ˆä¾‹å¦‚ 1 ç§’ï¼‰ï¼Œè®¤ä¸ºå®ƒçœŸæ­£åœç¨³äº†
             if (stopTimer >= waitBeforeCountdown)
             {
                 isBallStopped = true;
-                countdownTimer = countdownDuration; // ¿ªÆôµ¹¼ÆÊ±
-                Debug.Log("°××Ó X/Y ÖáÒÑÍêÈ«¾²Ö¹£¬¿ªÊ¼µ¹¼ÆÊ±£¡");
+                countdownTimer = countdownDuration; // å¼€å¯å€’è®¡æ—¶
+                Debug.Log("ç™½å­ X/Y è½´å·²å®Œå…¨é™æ­¢ï¼Œå¼€å§‹å€’è®¡æ—¶ï¼");
             }
         }
         else
         {
-            // Èç¹û»¹ÔÚ¶¯£¬ÖØÖÃ¾²Ö¹¼ÆÊ±Æ÷
+            // å¦‚æœè¿˜åœ¨åŠ¨ï¼Œé‡ç½®é™æ­¢è®¡æ—¶å™¨
             stopTimer = 0f;
         }
 
-        // ¸üĞÂÉÏÒ»Ö¡µÄÎ»ÖÃ
+        // æ›´æ–°ä¸Šä¸€å¸§çš„ä½ç½®
         lastPosition = ballTransform.position;
     }
 
-    // »æÖÆÅ×ÎïÏß
+    // ç»˜åˆ¶æŠ›ç‰©çº¿
     void DrawTrajectory(Vector3 origin, Vector3 initialVelocity)
     {
         lineRenderer.positionCount = trajectorySteps;
@@ -155,7 +172,7 @@ public class BallGameManager : MonoBehaviour
         lineRenderer.SetPositions(points);
     }
 
-    // ÓÉ¾É½Å±¾ÔÚ·¢ÉäÊ±µ÷ÓÃ
+    // ç”±æ—§è„šæœ¬åœ¨å‘å°„æ—¶è°ƒç”¨
     public void TriggerLaunch()
     {
         hasFired = true;
@@ -163,10 +180,10 @@ public class BallGameManager : MonoBehaviour
         stopTimer = 0f;
         lastPosition = ballTransform.position;
         lineRenderer.enabled = false;
-        Debug.Log("ÊÕµ½·¢ÉäĞÅºÅ£¬ÕıÔÚ¼à¿Ø°××ÓÔË¶¯×´Ì¬...");
+        Debug.Log("æ”¶åˆ°å‘å°„ä¿¡å·ï¼Œæ­£åœ¨ç›‘æ§ç™½å­è¿åŠ¨çŠ¶æ€...");
     }
 
-    // ÖØĞÂ¼ÓÔØµ±Ç°³¡¾°
+    // é‡æ–°åŠ è½½å½“å‰åœºæ™¯
     void ReloadCurrentScene()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -175,12 +192,12 @@ public class BallGameManager : MonoBehaviour
 
     void OnEliminated()
     {
-        Debug.Log("¡¾Î§ÆåÏû³ı¡¿ºÚ×ÓËÄÃæ±»°üÎ§£¬´¥·¢ Destroy£¡¹ı¹Ø£¡");
+        Debug.Log("ã€å›´æ£‹æ¶ˆé™¤ã€‘é»‘å­å››é¢è¢«åŒ…å›´ï¼Œè§¦å‘ Destroyï¼è¿‡å…³ï¼");
 
-        // Ïú»ÙºÚ×Ó
+        // é”€æ¯é»‘å­
         Destroy(gameObject);
 
-        // ÑÓ³Ù 0.5 Ãë»òÕßÖ±½Ó½øÈëÏÂÒ»¹Ø
+        // å»¶è¿Ÿ 0.5 ç§’æˆ–è€…ç›´æ¥è¿›å…¥ä¸‹ä¸€å…³
         Invoke("LoadNextScene", 0.5f);
     }
 
@@ -193,7 +210,7 @@ public class BallGameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("ÒÑ¾­ÊÇ×îºóÒ»¹ØÀ²£¡");
+            Debug.Log("å·²ç»æ˜¯æœ€åä¸€å…³å•¦ï¼");
         }
     }
 }

@@ -77,10 +77,10 @@ public class BallForces : MonoBehaviour
     public float minY = 213f;
     public float maxY = 372f;
 
-    // Êó±ê×î¶à¿ÉÒÔ´Ó³õÊ¼Î»ÖÃÍÏ¶¯¶àÉÙÏñËØ
+    // é¼ æ ‡æœ€å¤šå¯ä»¥ä»åˆå§‹ä½ç½®æ‹–åŠ¨å¤šå°‘åƒç´ 
     public float maxMouseDrag = 300f;
 
-    // Êó±êÒÆ¶¯µ½ÊÀ½ç×ø±êÊ±µÄÁéÃô¶È
+    // é¼ æ ‡ç§»åŠ¨åˆ°ä¸–ç•Œåæ ‡æ—¶çš„çµæ•åº¦
     public float dragSensitivity = 0.01f;
 
     [Header("Sound")]
@@ -89,29 +89,30 @@ public class BallForces : MonoBehaviour
 
     [Header("Launch Settings")]
 
-    // ×îĞ¡·¢ÉäÁ¦¶È
+    // æœ€å°å‘å°„åŠ›åº¦
     public float minLaunchForce = 10f;
 
-    // ×î´ó·¢ÉäÁ¦¶È
+    // æœ€å¤§å‘å°„åŠ›åº¦
     public float maxLaunchForce = 100f;
 
 
     [Header("Physics Settings")]
 
-    // ÊÇ·ñÔÚ·¢ÉäºóÊ¹ÓÃÖØÁ¦
+    // æ˜¯å¦åœ¨å‘å°„åä½¿ç”¨é‡åŠ›
     public bool useGravity = true;
 
 
     private Rigidbody rb;
 
-    // °××Ó¿ªÊ¼ÍÏ¶¯Ê±µÄÎ»ÖÃ
+    // ç™½å­å¼€å§‹æ‹–åŠ¨æ—¶çš„ä½ç½®
     private Vector3 startPosition;
 
-    // ¿ªÊ¼ÍÏ¶¯Ê±Êó±êµÄÎ»ÖÃ
+    // å¼€å§‹æ‹–åŠ¨æ—¶é¼ æ ‡çš„ä½ç½®
     private Vector2 mouseStartPosition;
 
-    // µ±Ç°ÊÇ·ñÕıÔÚÍÏ¶¯
+    // å½“å‰æ˜¯å¦æ­£åœ¨æ‹–åŠ¨
     private bool isDragging = false;
+    private bool hasCompletedLevel;
 
 
     void Start()
@@ -120,7 +121,7 @@ public class BallForces : MonoBehaviour
 
         rb.useGravity = useGravity;
 
-        // ÓÎÏ·¿ªÊ¼Ê±£¬°××Ó¹Ì¶¨ÔÚÔ­Î»ÖÃ
+        // æ¸¸æˆå¼€å§‹æ—¶ï¼Œç™½å­å›ºå®šåœ¨åŸä½ç½®
         rb.isKinematic = true;
 
         startPosition = transform.position;
@@ -135,8 +136,10 @@ public class BallForces : MonoBehaviour
 
     void Update()
     {
+        var splitter = GetComponent<CollisionSplit>();
+        if (splitter != null && splitter.HasSplit) return;
         // =========================
-        // Êó±ê°´ÏÂ
+        // é¼ æ ‡æŒ‰ä¸‹
         // =========================
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
@@ -146,7 +149,7 @@ public class BallForces : MonoBehaviour
 
 
         // =========================
-        // Êó±êÍÏ¶¯
+        // é¼ æ ‡æ‹–åŠ¨
         // =========================
 
         if (
@@ -159,7 +162,7 @@ public class BallForces : MonoBehaviour
 
 
         // =========================
-        // Êó±êËÉ¿ª
+        // é¼ æ ‡æ¾å¼€
         // =========================
 
         if (
@@ -173,7 +176,7 @@ public class BallForces : MonoBehaviour
 
 
     // =====================================================
-    // ¼ì²éÍæ¼ÒÓĞÃ»ÓĞµãµ½°××Ó
+    // æ£€æŸ¥ç©å®¶æœ‰æ²¡æœ‰ç‚¹åˆ°ç™½å­
     // =====================================================
 
     void TryStartDragging()
@@ -195,41 +198,41 @@ public class BallForces : MonoBehaviour
 
 
     // =====================================================
-    // ¿ªÊ¼ÍÏ¶¯
+    // å¼€å§‹æ‹–åŠ¨
     // =====================================================
 
     void StartDragging()
     {
         isDragging = true;
 
-        // ¼ÇÂ¼°××Ó¿ªÊ¼ÍÏ¶¯µÄÎ»ÖÃ
+        // è®°å½•ç™½å­å¼€å§‹æ‹–åŠ¨çš„ä½ç½®
         startPosition = transform.position;
 
-        // ¼ÇÂ¼Êó±ê¿ªÊ¼ÍÏ¶¯µÄÎ»ÖÃ
+        // è®°å½•é¼ æ ‡å¼€å§‹æ‹–åŠ¨çš„ä½ç½®
         mouseStartPosition =
             Mouse.current.position.ReadValue();
 
-        // ÍÏ¶¯ÆÚ¼ä²»ÈÃ Rigidbody ¸ÉÈÅ°××ÓÎ»ÖÃ
+        // æ‹–åŠ¨æœŸé—´ä¸è®© Rigidbody å¹²æ‰°ç™½å­ä½ç½®
         rb.isKinematic = true;
     }
 
 
     // =====================================================
-    // ÍÏ¶¯°××Ó
+    // æ‹–åŠ¨ç™½å­
     // =====================================================
 
     void DragBall()
     {
-        // µ±Ç°Êó±êÎ»ÖÃ
+        // å½“å‰é¼ æ ‡ä½ç½®
         Vector2 currentMousePosition =
             Mouse.current.position.ReadValue();
 
-        // Êó±ê´Ó¿ªÊ¼Î»ÖÃÒÆ¶¯ÁË¶àÉÙ
+        // é¼ æ ‡ä»å¼€å§‹ä½ç½®ç§»åŠ¨äº†å¤šå°‘
         Vector2 mouseDelta =
             currentMousePosition - mouseStartPosition;
 
 
-        // ÏŞÖÆÊó±êÒÆ¶¯·¶Î§
+        // é™åˆ¶é¼ æ ‡ç§»åŠ¨èŒƒå›´
         mouseDelta.x = Mathf.Clamp(
             mouseDelta.x,
             -maxMouseDrag,
@@ -243,7 +246,7 @@ public class BallForces : MonoBehaviour
         );
 
 
-        // Êó±êÒÆ¶¯ ¡ú Unity ÊÀ½ç×ø±êÒÆ¶¯
+        // é¼ æ ‡ç§»åŠ¨ â†’ Unity ä¸–ç•Œåæ ‡ç§»åŠ¨
         float newX =
             startPosition.x +
             mouseDelta.x * dragSensitivity;
@@ -255,12 +258,12 @@ public class BallForces : MonoBehaviour
         newX = Mathf.Clamp(newX, minX, maxX);
         newY = Mathf.Clamp(newY, minY, maxY);
 
-        // Z ÓÀÔ¶±£³ÖÔ­À´µÄÎ»ÖÃ
+        // Z æ°¸è¿œä¿æŒåŸæ¥çš„ä½ç½®
         float newZ =
             startPosition.z;
 
 
-        // ÉèÖÃ°××ÓÎ»ÖÃ
+        // è®¾ç½®ç™½å­ä½ç½®
         transform.position = new Vector3(
             newX,
             newY,
@@ -272,7 +275,7 @@ public class BallForces : MonoBehaviour
 
 
     // =====================================================
-    // ËÉ¿ªÊó±ê ¡ú ·¢Éä
+    // æ¾å¼€é¼ æ ‡ â†’ å‘å°„
     // =====================================================
 
     void LaunchBall()
@@ -281,7 +284,7 @@ public class BallForces : MonoBehaviour
 
 
         // ==========================================
-        // ¼ÆËãÍÏ¶¯¾àÀë
+        // è®¡ç®—æ‹–åŠ¨è·ç¦»
         // ==========================================
 
         Vector3 dragVector =
@@ -291,8 +294,8 @@ public class BallForces : MonoBehaviour
             dragVector.magnitude;
 
 
-        // Èç¹û»ù±¾Ã»ÍÏ¶¯
-        // ¾Í²»·¢Éä
+        // å¦‚æœåŸºæœ¬æ²¡æ‹–åŠ¨
+        // å°±ä¸å‘å°„
         if (dragDistance < 0.01f)
         {
             transform.position = startPosition;
@@ -304,20 +307,20 @@ public class BallForces : MonoBehaviour
 
 
         // ==========================================
-        // ¼ÆËã·¢Éä·½Ïò
+        // è®¡ç®—å‘å°„æ–¹å‘
         // ==========================================
 
-        // ÍÏ¶¯·½ÏòµÄ·´·½Ïò
+        // æ‹–åŠ¨æ–¹å‘çš„åæ–¹å‘
         Vector3 launchDirection =
             -dragVector.normalized;
 
 
         // ==========================================
-        // ¼ÆËã·¢ÉäÁ¦¶È
+        // è®¡ç®—å‘å°„åŠ›åº¦
         // ==========================================
 
-        // 0 = ÍêÈ«Ã»ÓĞÀ­
-        // 1 = À­µ½×î´ó·¶Î§
+        // 0 = å®Œå…¨æ²¡æœ‰æ‹‰
+        // 1 = æ‹‰åˆ°æœ€å¤§èŒƒå›´
 
         float dragPercent =
             Mathf.Clamp01(
@@ -326,7 +329,7 @@ public class BallForces : MonoBehaviour
             );
 
 
-        // ¸ù¾İÍÏ¶¯¾àÀë¼ÆËãÁ¦Á¿
+        // æ ¹æ®æ‹–åŠ¨è·ç¦»è®¡ç®—åŠ›é‡
 
         float launchForce =
             Mathf.Lerp(
@@ -337,19 +340,22 @@ public class BallForces : MonoBehaviour
 
 
         // ==========================================
-        // »Ö¸´ Rigidbody Physics
+        // æ¢å¤ Rigidbody Physics
         // ==========================================
 
         rb.isKinematic = false;
 
 
         // ==========================================
-        // ·¢Éä
+        // å‘å°„
         // ==========================================
 
         rb.isKinematic = false;
 
-        retryButton.SetActive(true);
+        if (retryButton != null) retryButton.SetActive(true);
+
+        var splitter = GetComponent<CollisionSplit>();
+        if (splitter != null) splitter.NotifyLaunched();
 
 
         rb.AddForce(
@@ -371,12 +377,22 @@ public class BallForces : MonoBehaviour
             audioSource.PlayOneShot(hitAudioClip);
         }
 
-        if (collision.gameObject.name == "wincondition")
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        }
+        TryCompleteLevel(collision.collider);
 
        
     }
  
+    public bool TryCompleteLevel(Collider other)
+    {
+        Transform target = other.transform;
+        while (target != null && target.name != "wincondition") target = target.parent;
+        if (target == null) return false;
+        if (hasCompletedLevel) return true;
+        hasCompletedLevel = true;
+        int nextScene = SceneManager.GetActiveScene().buildIndex + 1;
+        if (nextScene < SceneManager.sceneCountInBuildSettings) SceneManager.LoadScene(nextScene);
+        return true;
+    }
+
+    private void OnTriggerEnter(Collider other) { TryCompleteLevel(other); }
 }

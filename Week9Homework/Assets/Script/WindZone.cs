@@ -4,6 +4,8 @@ public class WindZone : MonoBehaviour
 {
     public Vector3 windDirection = Vector3.right;
     public float windForce = 5f;
+    [Tooltip("Disable to keep hinged gates and spring bumpers anchored in strong wind.")]
+    public bool affectJointedBodies = true;
 
     [Header("Wind Lines")]
     public bool showWindLines = true;
@@ -116,7 +118,8 @@ public class WindZone : MonoBehaviour
     {
         Rigidbody rb = other.attachedRigidbody;
 
-        if (rb != null && !rb.isKinematic)
+        if (rb != null && !rb.isKinematic &&
+            (affectJointedBodies || rb.GetComponent<Joint>() == null))
         {
             rb.AddForce(
                 windDirection.normalized * windForce,
