@@ -3811,6 +3811,74 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 217802667}
   m_Mesh: {fileID: -6813893305261455774, guid: 548ef1ebfe8f95145b64d84da9419172, type: 3}
+--- !u!1 &227331479
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 227331480}
+  - component: {fileID: 227331482}
+  - component: {fileID: 227331481}
+  m_Layer: 0
+  m_Name: WindZone (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &227331480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227331479}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 239.8, y: 259.5, z: -237.29999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 855877789}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &227331481
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227331479}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 69.90358, y: 60.46823, z: 33.63}
+  m_Center: {x: -58.938957, y: -6.2491913, z: 0}
+--- !u!114 &227331482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227331479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dc91279c5cc1e848bdd6371f094eec7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WindZone
+  windDirection: {x: -1, y: -1, z: 0}
+  windForce: 500
 --- !u!1 &241010823
 GameObject:
   m_ObjectHideFlags: 0
@@ -15392,6 +15460,12 @@ PrefabInstance:
     - {fileID: 3874982406241916479, guid: 548ef1ebfe8f95145b64d84da9419172, type: 3}
     - {fileID: -5548252123873969271, guid: 548ef1ebfe8f95145b64d84da9419172, type: 3}
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 548ef1ebfe8f95145b64d84da9419172, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 1286063649}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 548ef1ebfe8f95145b64d84da9419172, type: 3}
+      insertIndex: 3
+      addedObject: {fileID: 227331480}
     - targetCorrespondingSourceObject: {fileID: 8935635670087513227, guid: 548ef1ebfe8f95145b64d84da9419172, type: 3}
       insertIndex: 1
       addedObject: {fileID: 1196685898}
@@ -15502,6 +15576,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 443705177}
   m_SourcePrefab: {fileID: 100100000, guid: 548ef1ebfe8f95145b64d84da9419172, type: 3}
+--- !u!4 &855877789 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 548ef1ebfe8f95145b64d84da9419172, type: 3}
+  m_PrefabInstance: {fileID: 855877788}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &908374428
 GameObject:
   m_ObjectHideFlags: 0
@@ -21983,6 +22062,74 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283806817}
   m_Mesh: {fileID: 4170769388337562734, guid: 548ef1ebfe8f95145b64d84da9419172, type: 3}
+--- !u!1 &1286063648
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1286063649}
+  - component: {fileID: 1286063651}
+  - component: {fileID: 1286063650}
+  m_Layer: 0
+  m_Name: WindZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1286063649
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286063648}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 240.4, y: 193.9, z: -237.29999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 855877789}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1286063650
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286063648}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 69.90358, y: 60.46823, z: 33.63}
+  m_Center: {x: -58.938957, y: -6.2491913, z: 0}
+--- !u!114 &1286063651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286063648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dc91279c5cc1e848bdd6371f094eec7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WindZone
+  windDirection: {x: -1, y: 1, z: 0}
+  windForce: 500
 --- !u!1 &1307732818
 GameObject:
   m_ObjectHideFlags: 0
