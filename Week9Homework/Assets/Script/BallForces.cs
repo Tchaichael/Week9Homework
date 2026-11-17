@@ -203,6 +203,7 @@ public class BallForces : MonoBehaviour
 
     void StartDragging()
     {
+        GetComponent<CatLaunchSpin>()?.StopAndReset();
         isDragging = true;
 
         // 记录白子开始拖动的位置
@@ -362,6 +363,7 @@ public class BallForces : MonoBehaviour
             launchDirection * launchForce,
             ForceMode.Impulse
         );
+        GetComponent<CatLaunchSpin>()?.BeginSpin();
         BallGameManager gm = GetComponent<BallGameManager>();
         if (gm != null)
         {

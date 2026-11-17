@@ -13,8 +13,8 @@ public static class BallCatAppearance
     public static void Apply()
     {
         var scene = SceneManager.GetActiveScene();
-        if (scene.path != "Assets/Scenes/3.unity" || EditorApplication.isPlaying)
-            throw new Exception("Open scene 3 in edit mode first.");
+        if ((scene.path != "Assets/Scenes/3.unity" && scene.path != "Assets/Scenes/1.unity" && scene.path != "Assets/Scenes/0.unity") || EditorApplication.isPlaying)
+            throw new Exception("Open scene 0, 1 or 3 in edit mode first.");
         var ball = GameObject.Find("ball");
         if (!ball || ball.transform.Find("Burger Cat Visual"))
             throw new Exception("Ball missing or already has cat visual.");
@@ -67,7 +67,7 @@ public static class BallCatAppearance
         view.sceneLighting = false;
         view.sceneViewState.showImageEffects = false;
         view.LookAt(originalBounds.center, Quaternion.Euler(8, -12, 0), width * 1.4f);
-        File.WriteAllText("Temp/BallCatReplacement.txt", "PASS: scene 3 saved\nSource: Assets/Burger Cat.prefab\nOriginal player components unchanged: " +
+        File.WriteAllText("Temp/BallCatReplacement.txt", "PASS: " + scene.path + " saved\nSource: Assets/Burger Cat.prefab\nOriginal player components unchanged: " +
             string.Join(", ", components.Select(c => c.GetType().Name)) +
             "\nOriginal sphere renderer disabled; original collider and rigidbody retained.\nVisual bounds: " + BoundsOf(cat));
     }
@@ -79,6 +79,7 @@ public static class BallCatAppearance
         return bounds;
     }
 }
+
 
 
 

@@ -2200,7 +2200,7 @@ Transform:
   m_GameObject: {fileID: 292186817}
   serializedVersion: 2
   m_LocalRotation: {x: -0.000000003982308, y: -0.000000014661928, z: -3.861681e-16, w: 1}
-  m_LocalPosition: {x: 16.96, y: 241.6, z: -184.9}
+  m_LocalPosition: {x: 18.560001, y: 246.8, z: -184.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2586,7 +2586,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: -0.000000003982308, y: -0.000000014661928, z: -5.838831e-17, w: 1}
-  m_LocalPosition: {x: 16.96, y: 241.6, z: -184.9}
+  m_LocalPosition: {x: 18.560001, y: 246.8, z: -184.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4761,9 +4761,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CollisionSplit
   splitForce: 5
   pieceScale: 0.7
+  splitPieceScaleX: 18
   obstacleLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &496541308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 496541286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 799099962cfbf42458020d4f787b1ae9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CatLaunchSpin
+  visualTarget: {fileID: 1866022396}
+  initialSpeed: 60
+  maximumSpeed: 1440
+  accelerationTime: 1.5
 --- !u!1 &507515491 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5470368181256638864, guid: 548ef1ebfe8f95145b64d84da9419172, type: 3}
@@ -24803,12 +24820,24 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 40958629064571561, guid: 985f088ff10764f4a8055ffb320920c8, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 19.74
+      objectReference: {fileID: 0}
+    - target: {fileID: 40958629064571561, guid: 985f088ff10764f4a8055ffb320920c8, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 7.162076
+      objectReference: {fileID: 0}
+    - target: {fileID: 40958629064571561, guid: 985f088ff10764f4a8055ffb320920c8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 19.74
+      objectReference: {fileID: 0}
+    - target: {fileID: 40958629064571561, guid: 985f088ff10764f4a8055ffb320920c8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -37.2
+      value: -35.6
       objectReference: {fileID: 0}
     - target: {fileID: 40958629064571561, guid: 985f088ff10764f4a8055ffb320920c8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 241.6
+      value: 246.8
       objectReference: {fileID: 0}
     - target: {fileID: 40958629064571561, guid: 985f088ff10764f4a8055ffb320920c8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -24885,6 +24914,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2063657949477645524, guid: 985f088ff10764f4a8055ffb320920c8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 496541298}
+    - targetCorrespondingSourceObject: {fileID: 2063657949477645524, guid: 985f088ff10764f4a8055ffb320920c8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 496541308}
   m_SourcePrefab: {fileID: 100100000, guid: 985f088ff10764f4a8055ffb320920c8, type: 3}
 --- !u!1001 &1036274997825500734
 PrefabInstance:
@@ -24897,6 +24929,10 @@ PrefabInstance:
     - target: {fileID: 1954558979686402940, guid: 6b40a0aa7fd9aa84aa1a6139b3f6312b, type: 3}
       propertyPath: m_Name
       value: Burger Cat
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954558979686402940, guid: 6b40a0aa7fd9aa84aa1a6139b3f6312b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5662626842429169398, guid: 6b40a0aa7fd9aa84aa1a6139b3f6312b, type: 3}
       propertyPath: m_LocalPosition.x

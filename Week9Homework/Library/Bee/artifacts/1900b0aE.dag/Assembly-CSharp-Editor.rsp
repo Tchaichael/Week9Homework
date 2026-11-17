@@ -538,7 +538,13 @@
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.6.1f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll"
 "Assets/Editor/BallCatAppearance.cs"
 "Assets/Editor/BurgerCatBuilder.cs"
+"Assets/Editor/CatLaunchSpinSetup.cs"
+"Assets/Editor/CopyCatTrailsToScenes.cs"
+"Assets/Editor/Scene0BurgerCatSetup.cs"
+"Assets/Editor/Scene1BurgerCatSetup.cs"
+"Assets/Editor/Scene2CatSplitSetup.cs"
 "Assets/Editor/Scene2RouteBuilder.cs"
+"Assets/Editor/Scene2StarTrailSetup.cs"
 "Assets/TutorialInfo/Editor/ReadmeEditor.cs"
 -langversion:9.0
 /deterministic

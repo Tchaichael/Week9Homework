@@ -7,6 +7,7 @@ public class CollisionSplit : MonoBehaviour
     [Header("Scene 2 - Split on obstacle contact")]
     [Min(0f)] public float splitForce = 5f;
     [Range(0.4f, 1f)] public float pieceScale = 0.7f;
+    [Min(0.01f)] public float splitPieceScaleX = 18f;
     public LayerMask obstacleLayers = ~0;
     public bool HasSplit { get; private set; }
     private bool launched;
@@ -52,7 +53,9 @@ public class CollisionSplit : MonoBehaviour
         Vector3 velocity = incomingVelocity;
         if (Vector3.Dot(velocity, normal) < 0f) velocity = Vector3.Reflect(velocity, normal);
         velocity.z = 0f;
-        transform.localScale *= pieceScale;
+        Vector3 originalScale = transform.localScale;
+        float scaleFactor = splitPieceScaleX / Mathf.Max(0.0001f, Mathf.Abs(originalScale.x));
+        transform.localScale = originalScale * scaleFactor;
         body.mass *= 0.5f;
         GameObject second = CreateSecondPiece();
         Rigidbody secondBody = second.GetComponent<Rigidbody>();
@@ -89,8 +92,27 @@ public class CollisionSplit : MonoBehaviour
         MeshRenderer sourceRenderer = GetComponent<MeshRenderer>();
         MeshRenderer renderer = second.AddComponent<MeshRenderer>();
         renderer.sharedMaterials = sourceRenderer.sharedMaterials;
+        renderer.enabled = sourceRenderer.enabled;
         renderer.shadowCastingMode = sourceRenderer.shadowCastingMode;
         renderer.receiveShadows = sourceRenderer.receiveShadows;
+        // The player sphere is hidden: its actual appearance lives in this child.
+        // Copy only that visual hierarchy, not input, camera or countdown components.
+        Transform sourceVisual = transform.Find("Burger Cat Visual");
+        if (sourceVisual != null)
+        {
+            Transform visualCopy = Instantiate(sourceVisual, second.transform, false);
+            visualCopy.name = sourceVisual.name;
+            CatLaunchSpin sourceSpin = GetComponent<CatLaunchSpin>();
+            if (sourceSpin != null && sourceSpin.visualTarget != null)
+            {
+                var spin = second.AddComponent<CatLaunchSpin>();
+                spin.visualTarget = visualCopy.Find(GetRelativePath(sourceVisual, sourceSpin.visualTarget));
+                spin.initialSpeed = sourceSpin.initialSpeed;
+                spin.maximumSpeed = sourceSpin.maximumSpeed;
+                spin.accelerationTime = sourceSpin.accelerationTime;
+                if (sourceSpin.IsSpinning) spin.BeginSpin();
+            }
+        }
         Collider source = GetComponent<Collider>();
         Collider copy;
         if (source is SphereCollider sphere)
@@ -126,7 +148,20 @@ public class CollisionSplit : MonoBehaviour
         rb.constraints = body.constraints;
         rb.interpolation = body.interpolation;
         rb.collisionDetectionMode = body.collisionDetectionMode;
+        var sourceTrail = GetComponent<CatStarTrail>();
+        if (sourceTrail != null) sourceTrail.CopySettingsTo(second.AddComponent<CatStarTrail>());
         return second;
+    }
+
+    private static string GetRelativePath(Transform root, Transform target)
+    {
+        string path = target.name;
+        while (target.parent != null && target.parent != root)
+        {
+            target = target.parent;
+            path = target.name + "/" + path;
+        }
+        return path;
     }
 
     private static void ResolveOverlap(Collider collider)
