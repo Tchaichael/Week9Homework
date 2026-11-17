@@ -14,6 +14,16 @@ public class CollisionSplit : MonoBehaviour
     private Rigidbody body;
     private BallForces owner;
     private Vector3 incomingVelocity;
+    private bool splitPending;
+    private Vector3 pendingNormal;
+    private float portalProtectionUntil = float.NegativeInfinity;
+
+    public void ProtectPortalTransit()
+    {
+        // Discard contacts queued before the teleport, and the first exit physics step.
+        splitPending = false;
+        portalProtectionUntil = Time.fixedTime + 2f * Time.fixedDeltaTime;
+    }
 
     private void Awake()
     {
@@ -25,6 +35,14 @@ public class CollisionSplit : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // All collision/trigger callbacks from the previous step have now completed.
+        // A portal trigger can therefore cancel a collision regardless of callback order.
+        if (splitPending)
+        {
+            splitPending = false;
+            if (!HasSplit && !body.isKinematic && Time.fixedTime > portalProtectionUntil &&
+                !CatPortal.IsTouchingPortal(body)) Split(pendingNormal);
+        }
         if (!body.isKinematic) incomingVelocity = body.linearVelocity;
     }
 
@@ -32,15 +50,25 @@ public class CollisionSplit : MonoBehaviour
     {
         if (gameObject.scene.name != "2") return;
         if (owner != null && owner.TryCompleteLevel(collision.collider)) return;
+        if (CatPortal.IsPortalCollider(collision.collider)) return;
+        if (Time.fixedTime <= portalProtectionUntil) return;
         if (!launched || HasSplit || body.isKinematic || collision.contactCount == 0) return;
         if ((obstacleLayers.value & (1 << collision.gameObject.layer)) == 0) return;
         if (collision.collider.GetComponentInParent<CollisionSplit>() != null) return;
-        Split(collision.GetContact(0).normal);
+        if (splitPending) return;
+        pendingNormal = collision.GetContact(0).normal;
+        splitPending = true;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (CatPortal.IsPortalCollider(other)) ProtectPortalTransit();
         if (gameObject.scene.name == "2" && owner != null) owner.TryCompleteLevel(other);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (CatPortal.IsPortalCollider(other)) ProtectPortalTransit();
     }
 
     private void Split(Vector3 contactNormal)
@@ -59,6 +87,7 @@ public class CollisionSplit : MonoBehaviour
         body.mass *= 0.5f;
         GameObject second = CreateSecondPiece();
         Rigidbody secondBody = second.GetComponent<Rigidbody>();
+        GetComponent<CatClickDash>()?.RegisterPiece(secondBody);
         CollisionSplit secondSplit = second.AddComponent<CollisionSplit>();
         secondSplit.owner = owner;
         secondSplit.HasSplit = true;
@@ -107,10 +136,7 @@ public class CollisionSplit : MonoBehaviour
             {
                 var spin = second.AddComponent<CatLaunchSpin>();
                 spin.visualTarget = visualCopy.Find(GetRelativePath(sourceVisual, sourceSpin.visualTarget));
-                spin.initialSpeed = sourceSpin.initialSpeed;
-                spin.maximumSpeed = sourceSpin.maximumSpeed;
-                spin.accelerationTime = sourceSpin.accelerationTime;
-                if (sourceSpin.IsSpinning) spin.BeginSpin();
+                sourceSpin.CopyMotionTo(spin);
             }
         }
         Collider source = GetComponent<Collider>();

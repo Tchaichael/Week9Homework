@@ -34,6 +34,12 @@ public class CatStarTrail : MonoBehaviour
         emissionRemainder = 0f;
     }
 
+    public void ResetAfterTeleport()
+    {
+        previousPosition = transform.position;
+        emissionRemainder = 0f;
+    }
+
     void CreateParticles()
     {
         if (stars || !starMaterial) return;

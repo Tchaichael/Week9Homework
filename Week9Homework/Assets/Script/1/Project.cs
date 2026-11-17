@@ -25,6 +25,8 @@ public class SplitBall : MonoBehaviour
             GetComponent<CollisionSplit>() != null)
             return;
 
+        if (CatPortal.IsPortalCollider(collision.collider) || CatPortal.IsTouchingPortal(rb)) return;
+
         // 防止一次碰撞产生很多次分裂
         if (hasSplit || ballPrefab == null)
             return;

@@ -136,6 +136,10 @@ public class BallForces : MonoBehaviour
 
     void Update()
     {
+        // Scenes with click-dash switch permanently from aiming after launch.
+        var clickDash = GetComponent<CatClickDash>();
+        if (clickDash != null && clickDash.IsArmed) return;
+        if (Mouse.current == null) return;
         var splitter = GetComponent<CollisionSplit>();
         if (splitter != null && splitter.HasSplit) return;
         // =========================
@@ -363,6 +367,7 @@ public class BallForces : MonoBehaviour
             launchDirection * launchForce,
             ForceMode.Impulse
         );
+        GetComponent<CatClickDash>()?.Arm(rb);
         GetComponent<CatLaunchSpin>()?.BeginSpin();
         BallGameManager gm = GetComponent<BallGameManager>();
         if (gm != null)
