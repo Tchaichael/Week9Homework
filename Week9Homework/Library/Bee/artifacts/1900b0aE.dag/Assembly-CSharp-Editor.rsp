@@ -545,6 +545,7 @@
 "Assets/Editor/Scene2BackgroundSettingsSetup.cs"
 "Assets/Editor/Scene2CatSplitSetup.cs"
 "Assets/Editor/Scene2ClickDistanceSetup.cs"
+"Assets/Editor/Scene2ClickedCatCameraValidation.cs"
 "Assets/Editor/Scene2RouteBuilder.cs"
 "Assets/Editor/Scene2StarTrailSetup.cs"
 "Assets/Editor/SyncCatAndBackgroundScenes.cs"

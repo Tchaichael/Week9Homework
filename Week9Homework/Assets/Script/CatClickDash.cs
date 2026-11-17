@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using Unity.Cinemachine;
 
 // One input controller owns both the original cat and its split partner.
 [RequireComponent(typeof(Rigidbody))]
@@ -22,6 +23,7 @@ public class CatClickDash : MonoBehaviour
     public bool IsArmed => armed;
     [SerializeField, HideInInspector] private List<Rigidbody> cats = new List<Rigidbody>();
     private float nextDashTime;
+    private CinemachineCamera followCamera;
 
     public void Arm(Rigidbody cat)
     {
@@ -64,6 +66,7 @@ public class CatClickDash : MonoBehaviour
             closestDistance = distance;
         }
         if (!selected) return;
+        FollowClickedCat(selected);
         ReleaseAllSpins();
         selected.GetComponent<CatLaunchSpin>()?.PressSpin();
         // Every valid click spins immediately, even while the movement dash is cooling down.
@@ -79,6 +82,31 @@ public class CatClickDash : MonoBehaviour
         motion.BeginDistance(direction, dashDistance, cruiseSpeed, dashDuration);
         selected.WakeUp();
         GetComponent<BallGameManager>()?.TriggerLaunch();
+    }
+
+    public void FollowClickedCat(Rigidbody selected)
+    {
+        if (gameObject.scene.name != "2" || cats.Count < 2 || !selected || !cats.Contains(selected)) return;
+        if (!followCamera)
+        {
+            // Pick only the camera already following one of this player's cats.
+            foreach (var candidate in Object.FindObjectsByType<CinemachineCamera>())
+            {
+                if (!candidate.isActiveAndEnabled || candidate.gameObject.scene != gameObject.scene) continue;
+                foreach (Rigidbody cat in cats)
+                {
+                    if (!cat || candidate.Follow != cat.transform) continue;
+                    followCamera = candidate;
+                    break;
+                }
+                if (followCamera) break;
+            }
+        }
+        if (!followCamera) return;
+        Transform previous = followCamera.Follow;
+        followCamera.Follow = selected.transform;
+        if (followCamera.Target.CustomLookAtTarget && followCamera.Target.LookAtTarget == previous)
+            followCamera.LookAt = selected.transform;
     }
 
     private void ReleaseAllSpins()
