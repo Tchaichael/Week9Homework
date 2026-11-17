@@ -50,6 +50,7 @@ public class CollisionSplit : MonoBehaviour
     {
         if (gameObject.scene.name != "2") return;
         if (owner != null && owner.TryCompleteLevel(collision.collider)) return;
+        if (collision.collider.GetComponentInParent<CheesePickup>()) return;
         if (CatPortal.IsPortalCollider(collision.collider)) return;
         if (Time.fixedTime <= portalProtectionUntil) return;
         if (!launched || HasSplit || body.isKinematic || collision.contactCount == 0) return;

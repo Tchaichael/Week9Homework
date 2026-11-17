@@ -79,7 +79,7 @@ MonoBehaviour:
       collapsed: 0
     - groupType: UnityEngine.LightAnchor, Unity.RenderPipelines.Core.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       collapsed: 0
-    m_LastPivotModeTypeString: UnityEditor.CenterPivotMode, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_LastPivotModeTypeString: UnityEditor.PivotPointPivotMode, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     m_LastPivotRotationTypeString: UnityEditor.GlobalPivotRotation, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   m_CustomStates: []
   m_GroupsSettingsList: []
