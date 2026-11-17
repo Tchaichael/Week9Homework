@@ -1564,7 +1564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08696c277c7548b5aa8e1dd0bfa41f7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheesePickup
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: ec3c08b6c2efcc74cbcd5e86d5dac893, type: 3}
   soundVolume: 1
   visualTarget: {fileID: 236248228}
   pulseAmount: 0.04
@@ -4715,7 +4715,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08696c277c7548b5aa8e1dd0bfa41f7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheesePickup
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: ec3c08b6c2efcc74cbcd5e86d5dac893, type: 3}
   soundVolume: 1
   visualTarget: {fileID: 440413305}
   pulseAmount: 0.04
@@ -4817,7 +4817,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08696c277c7548b5aa8e1dd0bfa41f7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheesePickup
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: ec3c08b6c2efcc74cbcd5e86d5dac893, type: 3}
   soundVolume: 1
   visualTarget: {fileID: 1299520551}
   pulseAmount: 0.04
@@ -17365,7 +17365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08696c277c7548b5aa8e1dd0bfa41f7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheesePickup
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: ec3c08b6c2efcc74cbcd5e86d5dac893, type: 3}
   soundVolume: 1
   visualTarget: {fileID: 1710366617}
   pulseAmount: 0.04
@@ -19479,7 +19479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08696c277c7548b5aa8e1dd0bfa41f7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheesePickup
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: ec3c08b6c2efcc74cbcd5e86d5dac893, type: 3}
   soundVolume: 1
   visualTarget: {fileID: 2067141124}
   pulseAmount: 0.04
@@ -30876,7 +30876,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08696c277c7548b5aa8e1dd0bfa41f7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheesePickup
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: ec3c08b6c2efcc74cbcd5e86d5dac893, type: 3}
   soundVolume: 1
   visualTarget: {fileID: 153853377}
   pulseAmount: 0.04
@@ -32185,7 +32185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08696c277c7548b5aa8e1dd0bfa41f7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheesePickup
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: ec3c08b6c2efcc74cbcd5e86d5dac893, type: 3}
   soundVolume: 1
   visualTarget: {fileID: 1409346458}
   pulseAmount: 0.04
@@ -34511,7 +34511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08696c277c7548b5aa8e1dd0bfa41f7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheesePickup
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: ec3c08b6c2efcc74cbcd5e86d5dac893, type: 3}
   soundVolume: 1
   visualTarget: {fileID: 82028606}
   pulseAmount: 0.04
@@ -39179,7 +39179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08696c277c7548b5aa8e1dd0bfa41f7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheesePickup
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: ec3c08b6c2efcc74cbcd5e86d5dac893, type: 3}
   soundVolume: 1
   visualTarget: {fileID: 1350813423}
   pulseAmount: 0.04

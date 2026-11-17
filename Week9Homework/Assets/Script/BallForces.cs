@@ -82,6 +82,8 @@ public class BallForces : MonoBehaviour
 
     // 鼠标移动到世界坐标时的灵敏度
     public float dragSensitivity = 0.01f;
+    [Tooltip("以进入场景时的小猫位置为中心设置拖拽范围，适合移动了出生点的关卡。")]
+    public bool dragBoundsFollowSpawn;
 
     [Header("Sound")]
     public AudioClip hitAudioClip; 
@@ -125,6 +127,14 @@ public class BallForces : MonoBehaviour
         rb.isKinematic = true;
 
         startPosition = transform.position;
+        if (dragBoundsFollowSpawn)
+        {
+            float range = Mathf.Abs(maxMouseDrag * dragSensitivity);
+            minX = startPosition.x - range;
+            maxX = startPosition.x + range;
+            minY = startPosition.y - range;
+            maxY = startPosition.y + range;
+        }
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -236,6 +246,12 @@ public class BallForces : MonoBehaviour
         Vector2 mouseDelta =
             currentMousePosition - mouseStartPosition;
 
+        transform.position = GetDragPosition(mouseDelta);
+    }
+
+    public Vector3 GetDragPosition(Vector2 mouseDelta)
+    {
+
 
         // 限制鼠标移动范围
         mouseDelta.x = Mathf.Clamp(
@@ -269,7 +285,7 @@ public class BallForces : MonoBehaviour
 
 
         // 设置白子位置
-        transform.position = new Vector3(
+        return new Vector3(
             newX,
             newY,
             newZ

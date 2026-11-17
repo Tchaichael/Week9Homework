@@ -21,6 +21,14 @@ public static class Scene2CheesePickupSetup
 
     private static void ApplyPending()
     {
+        const string validation = "Temp/ValidateCheeseAcrossScenes.request";
+        if (File.Exists(validation) && !EditorApplication.isPlayingOrWillChangePlaymode)
+        {
+            Validate();
+            File.WriteAllText("Temp/ValidateCheeseAcrossScenesReport.txt",
+                "PASS: cat and split-piece collection, duplicate prevention and non-cat rejection; scene 3 collectible disappears with its scene 3 audio reference preserved.");
+            File.Delete(validation);
+        }
         const string request = "Temp/Scene2CheesePickup.request";
         if (!File.Exists(request) || EditorApplication.isPlayingOrWillChangePlaymode) return;
         Apply();
@@ -137,6 +145,10 @@ public static class Scene2CheesePickupSetup
             split.AddComponent<Rigidbody>();
             split.AddComponent<CollisionSplit>();
             Require(second.TryCollect(split.AddComponent<SphereCollider>()), "split cat collects cheese");
+            scene.name = "3";
+            var scene3Food = Create("Scene 3 cheese", scene).AddComponent<CheesePickup>();
+            Require(scene3Food.TryCollect(collider) && scene3Food.IsCollected && !scene3Food.gameObject.activeSelf,
+                "scene 3 cat collects and hides cheese");
         }
         finally { EditorSceneManager.ClosePreviewScene(scene); }
     }

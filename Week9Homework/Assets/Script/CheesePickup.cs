@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(BoxCollider), typeof(Rigidbody))]
+[ExecuteAlways]
 public class CheesePickup : MonoBehaviour
 {
     [Header("拾取音效（拖入你自己的音频）")]
@@ -12,17 +13,35 @@ public class CheesePickup : MonoBehaviour
     [Range(0f, .2f)] public float pulseAmount = .04f;
     [Min(.1f)] public float pulsePeriod = 2.5f;
     public float rotationSpeed = 18f;
+    [Header("拾取范围自动对齐")]
+    [Tooltip("自动把拾取触发器对齐可见奶酪，移动 Cheese Visual 后也会更新。")]
+    public bool autoFitTrigger = true;
+    [Range(0f, .5f)] public float triggerPadding = .08f;
+    public float gameplayDepth = -79f;
+    [Min(.1f)] public float gameplayDepthPadding = 4f;
     [SerializeField, HideInInspector] private Vector3 visualPivot;
     private Vector3 restPosition, restScale, pivotInParent;
     private Quaternion restRotation;
     private float phase;
     private bool captured;
+    private Renderer[] visualRenderers;
+    private Transform cachedVisual;
     public bool IsCollected { get; private set; }
 
     private void Awake()
     {
         phase = Random.value * Mathf.PI * 2f;
         CaptureRestPose();
+        RefreshPickupBounds();
+        if (Application.isPlaying)
+        {
+            var body = GetComponent<Rigidbody>();
+            body.isKinematic = true;
+            body.useGravity = false;
+            body.detectCollisions = true;
+            foreach (Collider collider in GetComponentsInChildren<Collider>(true))
+                if (collider.gameObject != gameObject) collider.enabled = false;
+        }
     }
 
     public void SetVisualPivot(Vector3 worldCenter)
@@ -41,7 +60,54 @@ public class CheesePickup : MonoBehaviour
         captured = true;
     }
 
-    private void LateUpdate() { ApplyAnimation(Time.time); }
+    private void LateUpdate()
+    {
+        if (Application.isPlaying) ApplyAnimation(Time.time);
+        RefreshPickupBounds();
+    }
+
+    private void FixedUpdate() { RefreshPickupBounds(); }
+
+    private void OnValidate() { RefreshPickupBounds(); }
+
+    public void RefreshPickupBounds()
+    {
+        if (!autoFitTrigger || IsCollected || !visualTarget) return;
+        if (visualRenderers == null || cachedVisual != visualTarget)
+        {
+            cachedVisual = visualTarget;
+            visualRenderers = visualTarget.GetComponentsInChildren<Renderer>(true);
+        }
+        var collider = GetComponent<BoxCollider>();
+        if (!collider) return;
+        bool found = false;
+        Bounds localBounds = default;
+        foreach (var renderer in visualRenderers)
+        {
+            if (!renderer || !renderer.enabled || !renderer.gameObject.activeInHierarchy) continue;
+            Bounds bounds = renderer.bounds;
+            for (int corner = 0; corner < 8; corner++)
+            {
+                Vector3 world = bounds.center + Vector3.Scale(bounds.extents, new Vector3(
+                    (corner & 1) == 0 ? -1f : 1f, (corner & 2) == 0 ? -1f : 1f,
+                    (corner & 4) == 0 ? -1f : 1f));
+                Vector3 local = transform.InverseTransformPoint(world);
+                if (!found) { localBounds = new Bounds(local, Vector3.zero); found = true; }
+                else localBounds.Encapsulate(local);
+                // Keep the pickup volume crossing the cat's XY gameplay plane.
+                world.z = gameplayDepth - gameplayDepthPadding;
+                localBounds.Encapsulate(transform.InverseTransformPoint(world));
+                world.z = gameplayDepth + gameplayDepthPadding;
+                localBounds.Encapsulate(transform.InverseTransformPoint(world));
+            }
+        }
+        if (!found) return;
+        Vector3 size = localBounds.size * (1f + Mathf.Max(0f, triggerPadding));
+        size = Vector3.Max(size, Vector3.one * .01f);
+        if (collider.center != localBounds.center) collider.center = localBounds.center;
+        if (collider.size != size) collider.size = size;
+        collider.isTrigger = true;
+    }
 
     public void ApplyAnimation(float time)
     {
@@ -60,7 +126,7 @@ public class CheesePickup : MonoBehaviour
 
     public bool TryCollect(Collider other)
     {
-        if (IsCollected || gameObject.scene.name != "2" || !other) return false;
+        if (IsCollected || !other) return false;
         Rigidbody cat = other.attachedRigidbody;
         if (!cat || (!cat.GetComponent<BallForces>() && !cat.GetComponent<CollisionSplit>())) return false;
         IsCollected = true;
@@ -87,6 +153,7 @@ public class CheesePickup : MonoBehaviour
 
     private void OnDisable()
     {
+        if (!Application.isPlaying) return;
         if (!captured || !visualTarget) return;
         visualTarget.localPosition = restPosition;
         visualTarget.localRotation = restRotation;
