@@ -525,6 +525,7 @@
 "Assets/Script/CatPortal.cs"
 "Assets/Script/CatPortalExitAcceleration.cs"
 "Assets/Script/CatStarTrail.cs"
+"Assets/Script/CatTutorialHints.cs"
 "Assets/Script/ChessBackgroundSettings.cs"
 "Assets/Script/CollisionSplit.cs"
 "Assets/Script/JointLinkVisual.cs"
